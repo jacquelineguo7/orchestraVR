@@ -21,12 +21,14 @@ struct orchestraApp: App {
                 AVPlayerView(viewModel: avPlayerViewModel)
             } else {
                 ContentView()
+                    .environmentObject(instrumentPositions)
                     .environment(appModel)
             }
         }
 
         ImmersiveSpace(id: appModel.immersiveSpaceID) {
             ImmersiveView()
+                .environmentObject(instrumentPositions)
                 .environment(appModel)
                 .onAppear {
                     appModel.immersiveSpaceState = .open

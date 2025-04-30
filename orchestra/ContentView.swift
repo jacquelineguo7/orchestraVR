@@ -11,7 +11,7 @@ import simd
 
 struct ContentView: View {
     
-    @EnvironmentObject var positionModel: InstrumentPositions
+    @EnvironmentObject var instrumentPositions: InstrumentPositions
     
 
     var body: some View {
@@ -20,8 +20,9 @@ struct ContentView: View {
             
             HStack {
                 Button(action: {
-                    if let pos = positionModel.positions["violin1_node"] {
-                        positionModel.targetPosition = pos
+                    if let pos = instrumentPositions.positions["violin1_node"] {
+                        instrumentPositions.targetPosition = pos
+                        print("Set targetPosition to \(pos)")
                     }
                     print("Violin 1 Node tapped!")
                 }) {
@@ -31,8 +32,9 @@ struct ContentView: View {
                 
                 Button(action: {
                     
-                    if let pos = positionModel.positions["violin2_node"] {
-                        positionModel.targetPosition = pos
+                    if let pos = instrumentPositions.positions["violin2_node"] {
+                        instrumentPositions.targetPosition = pos
+                        print("Set targetPosition to \(pos)")
                     }
                     print("Violin 2 Node tapped!")
 
@@ -42,8 +44,9 @@ struct ContentView: View {
                 }
                 
                 Button(action: {
-                    if let pos = positionModel.positions["viola_node"] {
-                        positionModel.targetPosition = pos
+                    if let pos = instrumentPositions.positions["viola_node"] {
+                        instrumentPositions.targetPosition = pos
+                        print("Set targetPosition to \(pos)")
                     }
                     print("Viola Node tapped!")
 
@@ -54,8 +57,9 @@ struct ContentView: View {
                 
                 Button(action: {
                     
-                    if let pos = positionModel.positions["cello_node"] {
-                        positionModel.targetPosition = pos
+                    if let pos = instrumentPositions.positions["cello_node"] {
+                        instrumentPositions.targetPosition = pos
+                        print("Set targetPosition to \(pos)")
                     }
                     print("Cello Node tapped!")
 
@@ -63,6 +67,13 @@ struct ContentView: View {
                     Text("Cello Node")
                     .font(.body)
                 }
+                
+                Button("Move Camera to Test Position") {
+                    // Set a test position (e.g., 2 meters forward)
+                    instrumentPositions.targetPosition = SIMD3<Float>(0, 0, -2)
+                    print("Set targetPosition to \(instrumentPositions.targetPosition)")
+                }
+
             }
             
         }
