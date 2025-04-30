@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import simd
 
 @main
 struct orchestraApp: App {
 
     @State private var appModel = AppModel()
     @State private var avPlayerViewModel = AVPlayerViewModel()
+    @StateObject var instrumentPositions = InstrumentPositions()
 
     var body: some Scene {
         WindowGroup {

@@ -8,6 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		BD2AABD62DC03EC700222CD1 /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = BD2AABD52DC03EC700222CD1 /* RealityKitContent */; };
+		BD2AAC422DC0C17F00222CD1 /* violin1_node.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BD2AAC3E2DC0C17F00222CD1 /* violin1_node.mp3 */; };
+		BD2AAC432DC0C17F00222CD1 /* viola_node.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BD2AAC3D2DC0C17F00222CD1 /* viola_node.mp3 */; };
+		BD2AAC442DC0C17F00222CD1 /* cello_node.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BD2AAC3C2DC0C17F00222CD1 /* cello_node.mp3 */; };
+		BD2AAC452DC0C17F00222CD1 /* violin2_node.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BD2AAC3F2DC0C17F00222CD1 /* violin2_node.mp3 */; };
+		BD2AAC642DC17F5100222CD1 /* violin2_node.wav in Resources */ = {isa = PBXBuildFile; fileRef = BD2AAC622DC17F5100222CD1 /* violin2_node.wav */; };
+		BD2AAC652DC17F5100222CD1 /* violin1_node.wav in Resources */ = {isa = PBXBuildFile; fileRef = BD2AAC612DC17F5100222CD1 /* violin1_node.wav */; };
+		BD2AAC662DC17F5100222CD1 /* cello_node.wav in Resources */ = {isa = PBXBuildFile; fileRef = BD2AAC5F2DC17F5100222CD1 /* cello_node.wav */; };
+		BD2AAC672DC17F5100222CD1 /* viola_node.wav in Resources */ = {isa = PBXBuildFile; fileRef = BD2AAC602DC17F5100222CD1 /* viola_node.wav */; };
+		BD66152D2DC1909C00A63D9B /* scene.rkassets in Resources */ = {isa = PBXBuildFile; fileRef = BD6615292DC1909C00A63D9B /* scene.rkassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,6 +33,15 @@
 		BD2AABD02DC03EC700222CD1 /* orchestra.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = orchestra.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD2AABD42DC03EC700222CD1 /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		BD2AABEF2DC03EC900222CD1 /* orchestraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = orchestraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD2AAC3C2DC0C17F00222CD1 /* cello_node.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = cello_node.mp3; sourceTree = "<group>"; };
+		BD2AAC3D2DC0C17F00222CD1 /* viola_node.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = viola_node.mp3; sourceTree = "<group>"; };
+		BD2AAC3E2DC0C17F00222CD1 /* violin1_node.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = violin1_node.mp3; sourceTree = "<group>"; };
+		BD2AAC3F2DC0C17F00222CD1 /* violin2_node.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = violin2_node.mp3; sourceTree = "<group>"; };
+		BD2AAC5F2DC17F5100222CD1 /* cello_node.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = cello_node.wav; sourceTree = "<group>"; };
+		BD2AAC602DC17F5100222CD1 /* viola_node.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = viola_node.wav; sourceTree = "<group>"; };
+		BD2AAC612DC17F5100222CD1 /* violin1_node.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = violin1_node.wav; sourceTree = "<group>"; };
+		BD2AAC622DC17F5100222CD1 /* violin2_node.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = violin2_node.wav; sourceTree = "<group>"; };
+		BD6615292DC1909C00A63D9B /* scene.rkassets */ = {isa = PBXFileReference; lastKnownFileType = folder.rkassets; path = scene.rkassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -74,6 +92,8 @@
 		BD2AABC72DC03EC700222CD1 = {
 			isa = PBXGroup;
 			children = (
+				BD66152B2DC1909C00A63D9B /* scene */,
+				BD2AAC412DC0C17F00222CD1 /* Audio */,
 				BD2AABD22DC03EC700222CD1 /* orchestra */,
 				BD2AABD32DC03EC700222CD1 /* Packages */,
 				BD2AABF22DC03EC900222CD1 /* orchestraTests */,
@@ -96,6 +116,46 @@
 				BD2AABD42DC03EC700222CD1 /* RealityKitContent */,
 			);
 			path = Packages;
+			sourceTree = "<group>";
+		};
+		BD2AAC402DC0C17F00222CD1 /* Summer */ = {
+			isa = PBXGroup;
+			children = (
+				BD2AAC3C2DC0C17F00222CD1 /* cello_node.mp3 */,
+				BD2AAC3D2DC0C17F00222CD1 /* viola_node.mp3 */,
+				BD2AAC3E2DC0C17F00222CD1 /* violin1_node.mp3 */,
+				BD2AAC3F2DC0C17F00222CD1 /* violin2_node.mp3 */,
+			);
+			path = Summer;
+			sourceTree = "<group>";
+		};
+		BD2AAC412DC0C17F00222CD1 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				BD2AAC402DC0C17F00222CD1 /* Summer */,
+				BD2AAC632DC17F5100222CD1 /* SummerWav */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		BD2AAC632DC17F5100222CD1 /* SummerWav */ = {
+			isa = PBXGroup;
+			children = (
+				BD2AAC5F2DC17F5100222CD1 /* cello_node.wav */,
+				BD2AAC602DC17F5100222CD1 /* viola_node.wav */,
+				BD2AAC612DC17F5100222CD1 /* violin1_node.wav */,
+				BD2AAC622DC17F5100222CD1 /* violin2_node.wav */,
+			);
+			path = SummerWav;
+			sourceTree = "<group>";
+		};
+		BD66152B2DC1909C00A63D9B /* scene */ = {
+			isa = PBXGroup;
+			children = (
+				BD6615292DC1909C00A63D9B /* scene.rkassets */,
+			);
+			name = scene;
+			path = scene/Sources/scene;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -191,6 +251,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD66152D2DC1909C00A63D9B /* scene.rkassets in Resources */,
+				BD2AAC422DC0C17F00222CD1 /* violin1_node.mp3 in Resources */,
+				BD2AAC432DC0C17F00222CD1 /* viola_node.mp3 in Resources */,
+				BD2AAC442DC0C17F00222CD1 /* cello_node.mp3 in Resources */,
+				BD2AAC452DC0C17F00222CD1 /* violin2_node.mp3 in Resources */,
+				BD2AAC642DC17F5100222CD1 /* violin2_node.wav in Resources */,
+				BD2AAC652DC17F5100222CD1 /* violin1_node.wav in Resources */,
+				BD2AAC662DC17F5100222CD1 /* cello_node.wav in Resources */,
+				BD2AAC672DC17F5100222CD1 /* viola_node.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,7 +305,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"orchestra/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "scene/Sources/scene orchestra/Preview\\ Content";
 				DEVELOPMENT_TEAM = KDAFH9274N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -252,6 +321,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 7;
+				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
@@ -262,7 +332,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"orchestra/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "scene/Sources/scene orchestra/Preview\\ Content";
 				DEVELOPMENT_TEAM = KDAFH9274N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -278,6 +348,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 7;
+				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};
