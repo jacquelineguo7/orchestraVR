@@ -156,42 +156,32 @@ struct ImmersiveView: View {
                 let seatLocalOriginal = instrumentPositions.positions[selectedName]
             else { return }
 
-            // Centroid calculation
+            // 1. Center and scale
             let allPositions = Array(instrumentPositions.positions.values)
-            let centroid: SIMD3<Float>
-            if allPositions.isEmpty {
-                centroid = .zero
-            } else {
-                centroid = allPositions.reduce(SIMD3<Float>(0,0,0), +) / Float(allPositions.count)
-            }
-
-            // Transform seat position
+            let centroid = allPositions.isEmpty ? .zero : allPositions.reduce(SIMD3<Float>(0,0,0), +) / Float(allPositions.count)
             let seatLocal = seatLocalOriginal - centroid
             let scale = quartet.scale
             let scaledSeat = seatLocal * scale
-            let rotatedSeat = SIMD3<Float>(-scaledSeat.x, scaledSeat.y, -scaledSeat.z)
-            let alignmentOffset = SIMD3<Float>(1.36, 0, -1.05)
-            let adjustedSeat = rotatedSeat
 
-            // Move and rotate the model
-            quartet.position = -adjustedSeat
-            let rotation = simd_quatf(angle: .pi, axis: [0,1,0])
+            // 2. Project to XZ plane
+            let seatXZ = SIMD2<Float>(scaledSeat.x, scaledSeat.z)
+
+            // 3. Calculate angle to negative Z axis
+            let angle = atan2(seatXZ.x, -seatXZ.y)
+
+            // 4. Rotate model so seat faces user
+            let rotation = simd_quatf(angle: -angle, axis: [0,1,0])
             quartet.orientation = rotation
 
-            // --- Camera Look-At Logic ---
-            // Calculate the seat's world position after all transforms
-            let seatWorldPos = quartet.position + rotatedSeat + alignmentOffset
-            let cameraPos = SIMD3<Float>(0, 0, 0) // User/camera at origin
+            // 5. Move model so seat is at origin (with offset)
+            let rotatedSeat = rotation.act(scaledSeat)
+            let alignmentOffset = SIMD3<Float>(1.36, 0, -1.05)
+            let adjustedSeat = rotatedSeat
+            quartet.position = -adjustedSeat
 
-            // Compute look-at quaternion
-            let cameraOrientation = lookAtQuaternion(from: cameraPos, to: seatWorldPos)
-
-            // Set the camera entity's orientation
-            cameraEntity?.orientation = cameraOrientation
-
-            print("Moved and rotated quartet so \(selectedName) is at the origin with alignment offset and centroid correction")
-            print("Camera now looks at \(selectedName) at \(seatWorldPos)")
+            print("Quartet rotated by \(-angle) radians so \(selectedName) is in front of user and at origin.")
         }
+
 
         
         
