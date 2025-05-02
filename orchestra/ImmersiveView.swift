@@ -34,6 +34,22 @@ struct ImmersiveView: View {
                     cameraEntity = foundCamera
                 }
                 
+                // Add the spheres code
+                if let quartet = stringQuartet {
+                    addMarker(to: quartet, color: .green)
+                }
+                
+                let seatColors: [UIColor] = [.blue, .cyan, .magenta, .yellow, .orange, .purple, .brown, .systemTeal]
+                let seatNames = Array(instrumentPositions.positions.keys)
+                for (index, name) in seatNames.enumerated() {
+                    if let quartet = stringQuartet,
+                       let seatNode = quartet.findEntity(named: name) {
+                        let color = seatColors[index % seatColors.count]
+                        addMarker(to: seatNode, color: color)
+                    }
+                }
+
+                
                 do {
                     let resource = try AudioFileResource.load(named: "violin1_node.wav", configuration: .init(shouldLoop: true))
                     loadedQuartet.playAudio(resource)
@@ -81,6 +97,15 @@ struct ImmersiveView: View {
                 print("Failed to load quartet")
             }
             
+            // Visual Marker in Scene
+            func addMarker(to parent: Entity, color: UIColor) {
+                let mesh = MeshResource.generateSphere(radius: 0.05)
+                let material = SimpleMaterial(color: color, isMetallic: false)
+                let marker = ModelEntity(mesh: mesh, materials: [material])
+                marker.position = [0, 0, 0] // Local to parent
+                parent.addChild(marker)
+            }
+            
             // --- Visual Markers for Debugging ---
 
             // Helper function to add a colored sphere marker
@@ -117,24 +142,25 @@ struct ImmersiveView: View {
         }
         .onChange(of: instrumentPositions.targetPosition) {
             let selectedName = instrumentPositions.selectedInstrumentName
-            let originPoint = SIMD3<Float>(0, 0, 4)
             guard
                 let quartet = stringQuartet,
-                
-                // 1. Get the local position of the seat
-                var instrumentPos = instrumentPositions.positions[selectedName]
+                let seatLocal = instrumentPositions.positions[selectedName]
             else { return }
 
-                // 2. Multiply the seat’s local position by the model’s scale (element-wise, for X, Y, Z)
-                instrumentPos.x *= 0.08
-                instrumentPos.y *= 0.08
-                instrumentPos.z *= 0.08
-            
-                // 3. Set the model’s position to align the seat with the user’s head/eyes
-                quartet.position = originPoint - instrumentPos
+            let scale = quartet.scale
+            let scaledSeat = seatLocal * scale
+            let alignmentOffset = SIMD3<Float>(1.36, 0, -1.05)
+            let adjustedSeat = scaledSeat + alignmentOffset
 
-            print("Moved quartet by \(-instrumentPos) to bring \(selectedName) to the user's viewpoint (origin)")
+            // Move the model so the selected seat is at the user's head (origin)
+            quartet.position = -adjustedSeat
+
+            // Rotate the model 180° about the Y axis if needed
+            quartet.orientation = simd_quatf(angle: .pi, axis: [0,1,0])
+
+            print("Moved and rotated quartet so \(selectedName) is at the origin with alignment offset")
         }
+
 
         
 
