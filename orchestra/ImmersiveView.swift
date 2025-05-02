@@ -152,15 +152,25 @@ struct ImmersiveView: View {
         .onChange(of: instrumentPositions.targetPosition) {
             let selectedName = instrumentPositions.selectedInstrumentName
             
-            guard
-                let quartet = stringQuartet,
-                let seatLocalOriginal = instrumentPositions.positions[selectedName]
-            else if (selectedName -= "reset_node") {
-                let seatLocalOriginal = SIMD3<Float>(0, 0, -4)
-            }
-            else {
-                return
-            }
+            // 1. Handle reset case first
+                if selectedName == "reset_node" {
+                    if let quartet = stringQuartet {
+                        // Set to your default position, orientation, and scale
+                        quartet.position = SIMD3<Float>(0, 0, -4)
+                        quartet.orientation = simd_quatf() // Identity quaternion (no rotation)
+                        // Optionally reset scale or other properties here
+                        print("Quartet reset to default position and orientation.")
+                    }
+                    return
+                }
+
+                // 2. Proceed with normal seat selection logic
+                guard
+                    let quartet = stringQuartet,
+                    let seatLocalOriginal = instrumentPositions.positions[selectedName]
+                else {
+                    return
+                }
 
             // 1. Calculate centroid of all seat nodes
             let allPositions = Array(instrumentPositions.positions.values)
