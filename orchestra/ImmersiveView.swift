@@ -151,36 +151,58 @@ struct ImmersiveView: View {
         }
         .onChange(of: instrumentPositions.targetPosition) {
             let selectedName = instrumentPositions.selectedInstrumentName
+            
             guard
                 let quartet = stringQuartet,
                 let seatLocalOriginal = instrumentPositions.positions[selectedName]
-            else { return }
+            else if (selectedName -= "reset_node") {
+                let seatLocalOriginal = SIMD3<Float>(0, 0, -4)
+            }
+            else {
+                return
+            }
 
-            // 1. Center and scale
+            // 1. Calculate centroid of all seat nodes
             let allPositions = Array(instrumentPositions.positions.values)
-            let centroid = allPositions.isEmpty ? .zero : allPositions.reduce(SIMD3<Float>(0,0,0), +) / Float(allPositions.count)
+            let centroid: SIMD3<Float>
+            if allPositions.isEmpty {
+                centroid = .zero
+            } else {
+                centroid = allPositions.reduce(SIMD3<Float>(0,0,0), +) / Float(allPositions.count)
+            }
+
+            // 2. Center and scale the selected seat
             let seatLocal = seatLocalOriginal - centroid
             let scale = quartet.scale
             let scaledSeat = seatLocal * scale
 
-            // 2. Project to XZ plane
+            // 3. Project to XZ plane and calculate angle to negative Z axis
             let seatXZ = SIMD2<Float>(scaledSeat.x, scaledSeat.z)
-
-            // 3. Calculate angle to negative Z axis
             let angle = atan2(seatXZ.x, -seatXZ.y)
 
-            // 4. Rotate model so seat faces user
-            let rotation = simd_quatf(angle: -angle, axis: [0,1,0])
+            // 4. Define correction angles for each seat (in radians)
+            // Adjust these values based on your model's actual seat orientations
+            let seatCorrectionAngles: [String: Float] = [
+                "violin1_node": 0,           // Outer seat, facing forward
+                "violin2_node": .pi / 2,           // Outer seat, facing forward
+                "viola_node": -.pi / 2,                // Middle seat, needs +90°
+                "cello_node": 0,     // Middle seat, needs -90°
+            ]
+            let correction = seatCorrectionAngles[selectedName] ?? 0
+
+            // 5. Rotate model so seat faces user, including correction
+            let rotation = simd_quatf(angle: -angle + correction, axis: [0,1,0])
             quartet.orientation = rotation
 
-            // 5. Move model so seat is at origin (with offset)
+            // 6. Move model so seat is at origin (with offset)
             let rotatedSeat = rotation.act(scaledSeat)
             let alignmentOffset = SIMD3<Float>(1.36, 0, -1.05)
             let adjustedSeat = rotatedSeat
             quartet.position = -adjustedSeat
 
-            print("Quartet rotated by \(-angle) radians so \(selectedName) is in front of user and at origin.")
+            print("Quartet rotated by \(-angle + correction) radians so \(selectedName) is in front of user and at origin.")
         }
+
 
 
         

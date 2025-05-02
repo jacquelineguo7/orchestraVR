@@ -72,6 +72,7 @@ struct ContentView: View {
                 
                 Button("Reset position") {
                     // Set a test position (e.g., 2 meters forward)
+                    instrumentPositions.selectedInstrumentName = "reset_node"
                     instrumentPositions.targetPosition = SIMD3<Float>(0, 0, -4)
                     print("Set targetPosition to \(instrumentPositions.targetPosition)")
                 }
