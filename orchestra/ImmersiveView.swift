@@ -149,14 +149,29 @@ struct ImmersiveView: View {
 
             let scale = quartet.scale
             let scaledSeat = seatLocal * scale
+            // Rotate 180° about Y: negate X and Z
+            let rotatedSeat = SIMD3<Float>(-scaledSeat.x, scaledSeat.y, -scaledSeat.z)
             let alignmentOffset = SIMD3<Float>(1.36, 0, -1.05)
-            let adjustedSeat = scaledSeat + alignmentOffset
+            let adjustedSeat = rotatedSeat + alignmentOffset
 
             // Move the model so the selected seat is at the user's head (origin)
             quartet.position = -adjustedSeat
 
-            // Rotate the model 180° about the Y axis if needed
-            quartet.orientation = simd_quatf(angle: .pi, axis: [0,1,0])
+            // Rotate the model 180° about the Y axis
+            let rotation = simd_quatf(angle: .pi, axis: [0,1,0])
+            quartet.orientation = rotation
+
+            // Update all other position nodes to match the new orientation
+            for (name, nodeLocal) in instrumentPositions.positions {
+                // Scale
+                let scaled = nodeLocal * scale
+                // Rotate 180° about Y
+                let rotated = SIMD3<Float>(-scaled.x, scaled.y, -scaled.z)
+                // Add alignment offset and model position
+                let worldPos = quartet.position + rotated + alignmentOffset
+                print("\(name) world position after rotation: \(worldPos)")
+                // Use worldPos for spatial audio, markers, etc.
+            }
 
             print("Moved and rotated quartet so \(selectedName) is at the origin with alignment offset")
         }
