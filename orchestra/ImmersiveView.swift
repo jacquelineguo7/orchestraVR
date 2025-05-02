@@ -116,6 +116,15 @@ struct ImmersiveView: View {
                 marker.position = position
                 content.add(marker)
             }
+            
+            func lookAtQuaternion(from: SIMD3<Float>, to: SIMD3<Float>, up: SIMD3<Float> = [0,1,0]) -> simd_quatf {
+                let forward = normalize(to - from)
+                let right = normalize(cross(up, forward))
+                let correctedUp = cross(forward, right)
+                let mat = float3x3(right, correctedUp, forward)
+                return simd_quatf(mat)
+            }
+
 
             // 1. User origin (red)
             addMarker(at: [0, 0, 0], color: .red, to: content)
@@ -144,37 +153,49 @@ struct ImmersiveView: View {
             let selectedName = instrumentPositions.selectedInstrumentName
             guard
                 let quartet = stringQuartet,
-                let seatLocal = instrumentPositions.positions[selectedName]
+                let seatLocalOriginal = instrumentPositions.positions[selectedName]
             else { return }
 
+            // 1. Calculate centroid of all seat nodes
+            let allPositions = Array(instrumentPositions.positions.values)
+            let centroid: SIMD3<Float>
+            if allPositions.isEmpty {
+                centroid = .zero
+            } else {
+                centroid = allPositions.reduce(SIMD3<Float>(0,0,0), +) / Float(allPositions.count)
+            }
+
+            // 2. Subtract centroid from selected seat and all nodes
+            let seatLocal = seatLocalOriginal - centroid
             let scale = quartet.scale
             let scaledSeat = seatLocal * scale
-            // Rotate 180° about Y: negate X and Z
-            let rotatedSeat = SIMD3<Float>(-scaledSeat.x, scaledSeat.y, -scaledSeat.z)
-            let alignmentOffset = SIMD3<Float>(1.36, 0, -1.05)
-            let adjustedSeat = rotatedSeat + alignmentOffset
 
-            // Move the model so the selected seat is at the user's head (origin)
+            // 3. Rotate 180° about Y (negate X and Z)
+            let rotatedSeat = SIMD3<Float>(-scaledSeat.x, scaledSeat.y, -scaledSeat.z)
+
+            // 4. Add your alignment offset
+            let alignmentOffset = SIMD3<Float>(1.36, 0, -1.05)
+            let adjustedSeat = rotatedSeat
+
+            // 5. Move the model so the selected seat is at the user's head (origin)
             quartet.position = -adjustedSeat
 
-            // Rotate the model 180° about the Y axis
+            // 6. Rotate the model 180° about the Y axis
             let rotation = simd_quatf(angle: .pi, axis: [0,1,0])
             quartet.orientation = rotation
 
-            // Update all other position nodes to match the new orientation
-            for (name, nodeLocal) in instrumentPositions.positions {
-                // Scale
+            // 7. (Optional) Print out new world positions for all nodes for debugging
+            for (name, nodeLocalOriginal) in instrumentPositions.positions {
+                let nodeLocal = nodeLocalOriginal - centroid
                 let scaled = nodeLocal * scale
-                // Rotate 180° about Y
                 let rotated = SIMD3<Float>(-scaled.x, scaled.y, -scaled.z)
-                // Add alignment offset and model position
                 let worldPos = quartet.position + rotated + alignmentOffset
-                print("\(name) world position after rotation: \(worldPos)")
-                // Use worldPos for spatial audio, markers, etc.
+                print("\(name) world position after recentering: \(worldPos)")
             }
 
-            print("Moved and rotated quartet so \(selectedName) is at the origin with alignment offset")
+            print("Moved and rotated quartet so \(selectedName) is at the origin with alignment offset and centroid correction")
         }
+
 
 
         
