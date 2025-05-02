@@ -10,4 +10,5 @@ import simd
 class InstrumentPositions: ObservableObject {
     @Published var positions: [String: SIMD3<Float>] = [:]
     @Published var targetPosition: SIMD3<Float> = .zero
+    @Published var selectedInstrumentName: String = ""
 }

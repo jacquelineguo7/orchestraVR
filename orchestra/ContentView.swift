@@ -20,6 +20,7 @@ struct ContentView: View {
             
             HStack {
                 Button(action: {
+                    instrumentPositions.selectedInstrumentName = "violin1_node"
                     if let pos = instrumentPositions.positions["violin1_node"] {
                         instrumentPositions.targetPosition = pos
                         print("Set targetPosition to \(pos)")
@@ -31,7 +32,7 @@ struct ContentView: View {
                 }
                 
                 Button(action: {
-                    
+                    instrumentPositions.selectedInstrumentName = "violin2_node"
                     if let pos = instrumentPositions.positions["violin2_node"] {
                         instrumentPositions.targetPosition = pos
                         print("Set targetPosition to \(pos)")
@@ -44,6 +45,7 @@ struct ContentView: View {
                 }
                 
                 Button(action: {
+                    instrumentPositions.selectedInstrumentName = "viola_node"
                     if let pos = instrumentPositions.positions["viola_node"] {
                         instrumentPositions.targetPosition = pos
                         print("Set targetPosition to \(pos)")
@@ -56,7 +58,7 @@ struct ContentView: View {
                 }
                 
                 Button(action: {
-                    
+                    instrumentPositions.selectedInstrumentName = "cello_node"
                     if let pos = instrumentPositions.positions["cello_node"] {
                         instrumentPositions.targetPosition = pos
                         print("Set targetPosition to \(pos)")
@@ -68,9 +70,9 @@ struct ContentView: View {
                     .font(.body)
                 }
                 
-                Button("Move Camera to Test Position") {
+                Button("Reset position") {
                     // Set a test position (e.g., 2 meters forward)
-                    instrumentPositions.targetPosition = SIMD3<Float>(0, 0, -2)
+                    instrumentPositions.targetPosition = SIMD3<Float>(0, 0, -4)
                     print("Set targetPosition to \(instrumentPositions.targetPosition)")
                 }
 
