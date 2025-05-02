@@ -9,17 +9,25 @@ import SwiftUI
 import RealityKit
 import RealityKitContent
 
+func lookAtQuaternion(from: SIMD3<Float>, to: SIMD3<Float>, up: SIMD3<Float> = [0,1,0]) -> simd_quatf {
+    let forward = normalize(to - from)
+    let right = normalize(cross(up, forward))
+    let correctedUp = cross(forward, right)
+    let mat = float3x3(right, correctedUp, forward)
+    return simd_quatf(mat)
+}
+
 struct ImmersiveView: View {
     @Environment(AppModel.self) var appModel
     @EnvironmentObject var instrumentPositions: InstrumentPositions
     @State private var cameraEntity: PerspectiveCamera?
     @State private var stringQuartet: Entity?
-
+    
     var body: some View {
         RealityView { content in
-
-
-// Load initial String Quartet 3D Model
+            
+            
+            // Load initial String Quartet 3D Model
             if let loadedQuartet = try? await Entity(named: "quartet", in: .main) {
                 stringQuartet = loadedQuartet
                 loadedQuartet.position = [0, 0, -4] // 2m in front of camera
@@ -48,7 +56,7 @@ struct ImmersiveView: View {
                         addMarker(to: seatNode, color: color)
                     }
                 }
-
+                
                 
                 do {
                     let resource = try AudioFileResource.load(named: "violin1_node.wav", configuration: .init(shouldLoop: true))
@@ -107,7 +115,7 @@ struct ImmersiveView: View {
             }
             
             // --- Visual Markers for Debugging ---
-
+            
             // Helper function to add a colored sphere marker
             func addMarker(at position: SIMD3<Float>, color: UIColor, to content: RealityViewContent) {
                 let mesh = MeshResource.generateSphere(radius: 0.05)
@@ -117,23 +125,15 @@ struct ImmersiveView: View {
                 content.add(marker)
             }
             
-            func lookAtQuaternion(from: SIMD3<Float>, to: SIMD3<Float>, up: SIMD3<Float> = [0,1,0]) -> simd_quatf {
-                let forward = normalize(to - from)
-                let right = normalize(cross(up, forward))
-                let correctedUp = cross(forward, right)
-                let mat = float3x3(right, correctedUp, forward)
-                return simd_quatf(mat)
-            }
-
-
+            
             // 1. User origin (red)
             addMarker(at: [0, 0, 0], color: .red, to: content)
-
+            
             // 2. Model origin (green)
             if let quartet = stringQuartet {
                 addMarker(at: quartet.position, color: .green, to: content)
             }
-
+            
             // 3. Each seat node (blue)
             let seatColors: [UIColor] = [.blue, .cyan, .magenta, .yellow, .orange, .purple, .brown, .systemTeal]
             let seatNames = Array(instrumentPositions.positions.keys)
@@ -145,9 +145,9 @@ struct ImmersiveView: View {
                     addMarker(at: worldPos, color: color, to: content)
                 }
             }
-
-
-
+            
+            
+            
         }
         .onChange(of: instrumentPositions.targetPosition) {
             let selectedName = instrumentPositions.selectedInstrumentName
@@ -156,7 +156,7 @@ struct ImmersiveView: View {
                 let seatLocalOriginal = instrumentPositions.positions[selectedName]
             else { return }
 
-            // 1. Calculate centroid of all seat nodes
+            // Centroid calculation
             let allPositions = Array(instrumentPositions.positions.values)
             let centroid: SIMD3<Float>
             if allPositions.isEmpty {
@@ -165,45 +165,42 @@ struct ImmersiveView: View {
                 centroid = allPositions.reduce(SIMD3<Float>(0,0,0), +) / Float(allPositions.count)
             }
 
-            // 2. Subtract centroid from selected seat and all nodes
+            // Transform seat position
             let seatLocal = seatLocalOriginal - centroid
             let scale = quartet.scale
             let scaledSeat = seatLocal * scale
-
-            // 3. Rotate 180° about Y (negate X and Z)
             let rotatedSeat = SIMD3<Float>(-scaledSeat.x, scaledSeat.y, -scaledSeat.z)
-
-            // 4. Add your alignment offset
             let alignmentOffset = SIMD3<Float>(1.36, 0, -1.05)
             let adjustedSeat = rotatedSeat
 
-            // 5. Move the model so the selected seat is at the user's head (origin)
+            // Move and rotate the model
             quartet.position = -adjustedSeat
-
-            // 6. Rotate the model 180° about the Y axis
             let rotation = simd_quatf(angle: .pi, axis: [0,1,0])
             quartet.orientation = rotation
 
-            // 7. (Optional) Print out new world positions for all nodes for debugging
-            for (name, nodeLocalOriginal) in instrumentPositions.positions {
-                let nodeLocal = nodeLocalOriginal - centroid
-                let scaled = nodeLocal * scale
-                let rotated = SIMD3<Float>(-scaled.x, scaled.y, -scaled.z)
-                let worldPos = quartet.position + rotated + alignmentOffset
-                print("\(name) world position after recentering: \(worldPos)")
-            }
+            // --- Camera Look-At Logic ---
+            // Calculate the seat's world position after all transforms
+            let seatWorldPos = quartet.position + rotatedSeat + alignmentOffset
+            let cameraPos = SIMD3<Float>(0, 0, 0) // User/camera at origin
+
+            // Compute look-at quaternion
+            let cameraOrientation = lookAtQuaternion(from: cameraPos, to: seatWorldPos)
+
+            // Set the camera entity's orientation
+            cameraEntity?.orientation = cameraOrientation
 
             print("Moved and rotated quartet so \(selectedName) is at the origin with alignment offset and centroid correction")
+            print("Camera now looks at \(selectedName) at \(seatWorldPos)")
         }
 
-
-
         
-
+        
         
     }
     
 }
+    
+
 
 #Preview(immersionStyle: .progressive) {
     ImmersiveView()
