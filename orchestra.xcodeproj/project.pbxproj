@@ -18,6 +18,7 @@
 		BD2AAC672DC17F5100222CD1 /* viola_node.wav in Resources */ = {isa = PBXBuildFile; fileRef = BD2AAC602DC17F5100222CD1 /* viola_node.wav */; };
 		BDC6F78C2DD178A6009C2DCB /* ballroom.exr in Resources */ = {isa = PBXBuildFile; fileRef = BDC6F78B2DD178A6009C2DCB /* ballroom.exr */; };
 		BDC6F78E2DD17A78009C2DCB /* scene.rkassets in Resources */ = {isa = PBXBuildFile; fileRef = BDC6F78D2DD17A78009C2DCB /* scene.rkassets */; };
+		BDC6F7902DD1D487009C2DCB /* orchestra.png in Resources */ = {isa = PBXBuildFile; fileRef = BDC6F78F2DD1D487009C2DCB /* orchestra.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		BD2AAC622DC17F5100222CD1 /* violin2_node.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = violin2_node.wav; sourceTree = "<group>"; };
 		BDC6F78B2DD178A6009C2DCB /* ballroom.exr */ = {isa = PBXFileReference; lastKnownFileType = file; path = ballroom.exr; sourceTree = "<group>"; };
 		BDC6F78D2DD17A78009C2DCB /* scene.rkassets */ = {isa = PBXFileReference; lastKnownFileType = folder.rkassets; name = scene.rkassets; path = scene/Sources/scene/scene.rkassets; sourceTree = "<group>"; };
+		BDC6F78F2DD1D487009C2DCB /* orchestra.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = orchestra.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -94,6 +96,7 @@
 		BD2AABC72DC03EC700222CD1 = {
 			isa = PBXGroup;
 			children = (
+				BDC6F78F2DD1D487009C2DCB /* orchestra.png */,
 				BDC6F78D2DD17A78009C2DCB /* scene.rkassets */,
 				BDC6F78B2DD178A6009C2DCB /* ballroom.exr */,
 				BD2AAC412DC0C17F00222CD1 /* Audio */,
@@ -246,6 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BD2AAC422DC0C17F00222CD1 /* violin1_node.mp3 in Resources */,
+				BDC6F7902DD1D487009C2DCB /* orchestra.png in Resources */,
 				BD2AAC432DC0C17F00222CD1 /* viola_node.mp3 in Resources */,
 				BDC6F78C2DD178A6009C2DCB /* ballroom.exr in Resources */,
 				BD2AAC442DC0C17F00222CD1 /* cello_node.mp3 in Resources */,

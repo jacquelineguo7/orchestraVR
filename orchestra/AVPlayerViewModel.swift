@@ -11,6 +11,7 @@ import AVKit
 @Observable
 class AVPlayerViewModel: NSObject {
     var isPlaying: Bool = false
+    
     private var avPlayerViewController: AVPlayerViewController?
     private var avPlayer = AVPlayer()
     private let videoURL: URL? = {
@@ -18,6 +19,8 @@ class AVPlayerViewModel: NSObject {
         // Bundle.main.url(forResource: "MyVideo", withExtension: "mp4")
         return nil
     }()
+    
+    
 
     func makePlayerViewController() -> AVPlayerViewController {
         let avPlayerViewController = AVPlayerViewController()

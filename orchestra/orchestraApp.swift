@@ -23,6 +23,7 @@ struct orchestraApp: App {
                 ContentView()
                     .environmentObject(instrumentPositions)
                     .environment(appModel)
+                
             }
         }
 
