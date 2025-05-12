@@ -19,3 +19,7 @@ class AppModel {
     }
     var immersiveSpaceState = ImmersiveSpaceState.closed
 }
+
+import Foundation
+
+
