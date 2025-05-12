@@ -21,6 +21,8 @@ struct ContentView: View {
             HStack {
                 Button(action: {
                     instrumentPositions.selectedInstrumentName = "violin1_node"
+//                    instrumentPositions.targetPosition = SIMD3<Float>(-140, 50, 72)
+//                    print("Set violin1_node targetPosition")
                     if let pos = instrumentPositions.positions["violin1_node"] {
                         instrumentPositions.targetPosition = pos
                         print("Set targetPosition to \(pos)")
@@ -33,6 +35,8 @@ struct ContentView: View {
                 
                 Button(action: {
                     instrumentPositions.selectedInstrumentName = "violin2_node"
+//                    instrumentPositions.targetPosition = SIMD3<Float>(-80, 50, 15)
+//                    print("Set violin2_node targetPosition")
                     if let pos = instrumentPositions.positions["violin2_node"] {
                         instrumentPositions.targetPosition = pos
                         print("Set targetPosition to \(pos)")
@@ -46,6 +50,8 @@ struct ContentView: View {
                 
                 Button(action: {
                     instrumentPositions.selectedInstrumentName = "viola_node"
+//                    instrumentPositions.targetPosition = SIMD3<Float>(-23, 50, 12.5)
+//                    print("Set viola_node targetPosition")
                     if let pos = instrumentPositions.positions["viola_node"] {
                         instrumentPositions.targetPosition = pos
                         print("Set targetPosition to \(pos)")
@@ -59,6 +65,8 @@ struct ContentView: View {
                 
                 Button(action: {
                     instrumentPositions.selectedInstrumentName = "cello_node"
+//                    instrumentPositions.targetPosition = SIMD3<Float>(8, 50, 77)
+//                    print("Set cello_node targetPosition")
                     if let pos = instrumentPositions.positions["cello_node"] {
                         instrumentPositions.targetPosition = pos
                         print("Set targetPosition to \(pos)")

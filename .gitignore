@@ -73,3 +73,4 @@ Sources/
 Audio/
 .swiftpm/
 scene/
+*.exr

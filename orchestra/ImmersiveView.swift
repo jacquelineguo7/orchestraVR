@@ -26,11 +26,45 @@ struct ImmersiveView: View {
     var body: some View {
         RealityView { content in
             
+            // Add Skybox
+            // 1. Load the .exr texture resource
+            guard let skyboxTexture = try? await TextureResource.load(named: "ballroom.exr") else {
+                print("Failed to load skybox texture")
+                return
+            }
+
+            // 2. Create an unlit material with the skybox texture
+            var skyboxMaterial = UnlitMaterial()
+            skyboxMaterial.color = .init(texture: .init(skyboxTexture))
+
+            // 3. Generate a large sphere mesh
+            let skyboxSphere = ModelEntity(
+                mesh: .generateSphere(radius: 1000),
+                materials: [skyboxMaterial]
+            )
+
+            // 4. Flip the sphere inside out so the texture is visible from inside
+            skyboxSphere.scale = SIMD3<Float>(-1, 1, 1)
+            skyboxSphere.position += SIMD3<Float>(0, -0.5, 0)
+
+            // 5. Add the skybox to the scene
+            content.add(skyboxSphere)
+            
+            
+            // Point Light
+            let topLight = PointLight()
+            topLight.light.intensity = 5000 // Make it bright
+            topLight.light.color = .white
+            topLight.position = [0, 5, 0] // 5 meters above the origin
+
+            content.add(topLight)
+
+            
             
             // Load initial String Quartet 3D Model
             if let loadedQuartet = try? await Entity(named: "quartet", in: .main) {
                 stringQuartet = loadedQuartet
-                loadedQuartet.position = [0, 0, -4] // 2m in front of camera
+                loadedQuartet.position = [0, -0.4, -4] // 2m in front of camera
                 loadedQuartet.scale = [0.08, 0.08, 0.08]
                 content.add(loadedQuartet)
                 print("Loaded quartet")
@@ -42,20 +76,20 @@ struct ImmersiveView: View {
                     cameraEntity = foundCamera
                 }
                 
-                // Add the spheres code
-                if let quartet = stringQuartet {
-                    addMarker(to: quartet, color: .green)
-                }
-                
-                let seatColors: [UIColor] = [.blue, .cyan, .magenta, .yellow, .orange, .purple, .brown, .systemTeal]
-                let seatNames = Array(instrumentPositions.positions.keys)
-                for (index, name) in seatNames.enumerated() {
-                    if let quartet = stringQuartet,
-                       let seatNode = quartet.findEntity(named: name) {
-                        let color = seatColors[index % seatColors.count]
-                        addMarker(to: seatNode, color: color)
-                    }
-                }
+//                // Add the spheres code
+//                if let quartet = stringQuartet {
+//                    addMarker(to: quartet, color: .green)
+//                }
+//                
+//                let seatColors: [UIColor] = [.blue, .cyan, .magenta, .yellow, .orange, .purple, .brown, .systemTeal]
+//                let seatNames = Array(instrumentPositions.positions.keys)
+//                for (index, name) in seatNames.enumerated() {
+//                    if let quartet = stringQuartet,
+//                       let seatNode = quartet.findEntity(named: name) {
+//                        let color = seatColors[index % seatColors.count]
+//                        addMarker(to: seatNode, color: color)
+//                    }
+//                }
                 
                 
                 do {
@@ -78,13 +112,19 @@ struct ImmersiveView: View {
                             position: nodeEntity.position,
                             audioFile: "\(name).wav"
                         )
+                        
+                        if let modelEntity = stringQuartet?.findEntity(named: name) as? ModelEntity {
+                            modelEntity.model = nil // Hides the mesh, keeps audio and position
+                        }
+                        
                         print("Position of \(name) is \(nodeEntity.position)")
                         instrumentPositions.positions[name] = nodeEntity.position
                         instrumentNodes[name] = node
                         positionNodes.append(node.position)
                         
-                        nodeEntity.spatialAudio = SpatialAudioComponent(gain: 0)
-                        nodeEntity.spatialAudio?.directivity = .beam(focus: 1)
+                        nodeEntity.spatialAudio = SpatialAudioComponent(gain: 0.8)
+                        nodeEntity.spatialAudio?.directivity = .beam(focus: 0.3)
+                        nodeEntity.spatialAudio?.reverbLevel = 0.4
                         
                         do {
                             let resource = try AudioFileResource.load(named: "\(name).wav", configuration: .init(shouldLoop: true))
@@ -101,50 +141,53 @@ struct ImmersiveView: View {
                         print("Node not found: \(name)")
                     }
                 }
+            
+                
+                
             } else {
                 print("Failed to load quartet")
             }
             
-            // Visual Marker in Scene
-            func addMarker(to parent: Entity, color: UIColor) {
-                let mesh = MeshResource.generateSphere(radius: 0.05)
-                let material = SimpleMaterial(color: color, isMetallic: false)
-                let marker = ModelEntity(mesh: mesh, materials: [material])
-                marker.position = [0, 0, 0] // Local to parent
-                parent.addChild(marker)
-            }
+//            // Visual Marker in Scene
+//            func addMarker(to parent: Entity, color: UIColor) {
+//                let mesh = MeshResource.generateSphere(radius: 0.05)
+//                let material = SimpleMaterial(color: color, isMetallic: false)
+//                let marker = ModelEntity(mesh: mesh, materials: [material])
+//                marker.position = [0, 0, 0] // Local to parent
+//                parent.addChild(marker)
+//            }
+//            
+//            // --- Visual Markers for Debugging ---
+//            
+//            // Helper function to add a colored sphere marker
+//            func addMarker(at position: SIMD3<Float>, color: UIColor, to content: RealityViewContent) {
+//                let mesh = MeshResource.generateSphere(radius: 0.05)
+//                let material = SimpleMaterial(color: color, isMetallic: false)
+//                let marker = ModelEntity(mesh: mesh, materials: [material])
+//                marker.position = position
+//                content.add(marker)
+//            }
             
-            // --- Visual Markers for Debugging ---
             
-            // Helper function to add a colored sphere marker
-            func addMarker(at position: SIMD3<Float>, color: UIColor, to content: RealityViewContent) {
-                let mesh = MeshResource.generateSphere(radius: 0.05)
-                let material = SimpleMaterial(color: color, isMetallic: false)
-                let marker = ModelEntity(mesh: mesh, materials: [material])
-                marker.position = position
-                content.add(marker)
-            }
-            
-            
-            // 1. User origin (red)
-            addMarker(at: [0, 0, 0], color: .red, to: content)
-            
-            // 2. Model origin (green)
-            if let quartet = stringQuartet {
-                addMarker(at: quartet.position, color: .green, to: content)
-            }
-            
-            // 3. Each seat node (blue)
-            let seatColors: [UIColor] = [.blue, .cyan, .magenta, .yellow, .orange, .purple, .brown, .systemTeal]
-            let seatNames = Array(instrumentPositions.positions.keys)
-            for (index, name) in seatNames.enumerated() {
-                if let pos = instrumentPositions.positions[name], let quartet = stringQuartet {
-                    let scaledPos = pos * quartet.scale
-                    let worldPos = quartet.position + scaledPos + SIMD3<Float>(1.36, 0, -1.05)
-                    let color = seatColors[index]
-                    addMarker(at: worldPos, color: color, to: content)
-                }
-            }
+//            // 1. User origin (red)
+//            addMarker(at: [0, 0, 0], color: .red, to: content)
+//            
+//            // 2. Model origin (green)
+//            if let quartet = stringQuartet {
+//                addMarker(at: quartet.position, color: .green, to: content)
+//            }
+//            
+//            // 3. Each seat node (blue)
+//            let seatColors: [UIColor] = [.blue, .cyan, .magenta, .yellow, .orange, .purple, .brown, .systemTeal]
+//            let seatNames = Array(instrumentPositions.positions.keys)
+//            for (index, name) in seatNames.enumerated() {
+//                if let pos = instrumentPositions.positions[name], let quartet = stringQuartet {
+//                    let scaledPos = pos * quartet.scale
+//                    let worldPos = quartet.position + scaledPos + SIMD3<Float>(1.36, 0, -1.05)
+//                    let color = seatColors[index]
+//                    addMarker(at: worldPos, color: color, to: content)
+//                }
+//            }
             
             
             
@@ -156,7 +199,7 @@ struct ImmersiveView: View {
                 if selectedName == "reset_node" {
                     if let quartet = stringQuartet {
                         // Set to your default position, orientation, and scale
-                        quartet.position = SIMD3<Float>(0, 0, -4)
+                        quartet.position = SIMD3<Float>(0, -0.4, -4)
                         quartet.orientation = simd_quatf() // Identity quaternion (no rotation)
                         // Optionally reset scale or other properties here
                         print("Quartet reset to default position and orientation.")
@@ -196,7 +239,7 @@ struct ImmersiveView: View {
                 "violin1_node": 0,           // Outer seat, facing forward
                 "violin2_node": .pi / 2,           // Outer seat, facing forward
                 "viola_node": -.pi / 2,                // Middle seat, needs +90°
-                "cello_node": 0,     // Middle seat, needs -90°
+                "cello_node": .pi / 8,     // Middle seat, needs -90°
             ]
             let correction = seatCorrectionAngles[selectedName] ?? 0
 
@@ -206,8 +249,10 @@ struct ImmersiveView: View {
 
             // 6. Move model so seat is at origin (with offset)
             let rotatedSeat = rotation.act(scaledSeat)
-            let alignmentOffset = SIMD3<Float>(1.36, 0, -1.05)
-            let adjustedSeat = rotatedSeat
+            let yOffset = SIMD3<Float>(0, 0.2, 0)
+            // let alignmentOffset = SIMD3<Float>(1.36, yOffset, -1.05)
+            // let alignmentOffset = SIMD3<Float>(1.36, 0, -1.05)
+            let adjustedSeat = rotatedSeat + yOffset
             quartet.position = -adjustedSeat
 
             print("Quartet rotated by \(-angle + correction) radians so \(selectedName) is in front of user and at origin.")

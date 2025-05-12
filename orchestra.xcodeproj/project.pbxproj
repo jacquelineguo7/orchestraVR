@@ -16,7 +16,8 @@
 		BD2AAC652DC17F5100222CD1 /* violin1_node.wav in Resources */ = {isa = PBXBuildFile; fileRef = BD2AAC612DC17F5100222CD1 /* violin1_node.wav */; };
 		BD2AAC662DC17F5100222CD1 /* cello_node.wav in Resources */ = {isa = PBXBuildFile; fileRef = BD2AAC5F2DC17F5100222CD1 /* cello_node.wav */; };
 		BD2AAC672DC17F5100222CD1 /* viola_node.wav in Resources */ = {isa = PBXBuildFile; fileRef = BD2AAC602DC17F5100222CD1 /* viola_node.wav */; };
-		BD66152D2DC1909C00A63D9B /* scene.rkassets in Resources */ = {isa = PBXBuildFile; fileRef = BD6615292DC1909C00A63D9B /* scene.rkassets */; };
+		BDC6F78C2DD178A6009C2DCB /* ballroom.exr in Resources */ = {isa = PBXBuildFile; fileRef = BDC6F78B2DD178A6009C2DCB /* ballroom.exr */; };
+		BDC6F78E2DD17A78009C2DCB /* scene.rkassets in Resources */ = {isa = PBXBuildFile; fileRef = BDC6F78D2DD17A78009C2DCB /* scene.rkassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,7 +42,8 @@
 		BD2AAC602DC17F5100222CD1 /* viola_node.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = viola_node.wav; sourceTree = "<group>"; };
 		BD2AAC612DC17F5100222CD1 /* violin1_node.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = violin1_node.wav; sourceTree = "<group>"; };
 		BD2AAC622DC17F5100222CD1 /* violin2_node.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = violin2_node.wav; sourceTree = "<group>"; };
-		BD6615292DC1909C00A63D9B /* scene.rkassets */ = {isa = PBXFileReference; lastKnownFileType = folder.rkassets; path = scene.rkassets; sourceTree = "<group>"; };
+		BDC6F78B2DD178A6009C2DCB /* ballroom.exr */ = {isa = PBXFileReference; lastKnownFileType = file; path = ballroom.exr; sourceTree = "<group>"; };
+		BDC6F78D2DD17A78009C2DCB /* scene.rkassets */ = {isa = PBXFileReference; lastKnownFileType = folder.rkassets; name = scene.rkassets; path = scene/Sources/scene/scene.rkassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -92,7 +94,8 @@
 		BD2AABC72DC03EC700222CD1 = {
 			isa = PBXGroup;
 			children = (
-				BD66152B2DC1909C00A63D9B /* scene */,
+				BDC6F78D2DD17A78009C2DCB /* scene.rkassets */,
+				BDC6F78B2DD178A6009C2DCB /* ballroom.exr */,
 				BD2AAC412DC0C17F00222CD1 /* Audio */,
 				BD2AABD22DC03EC700222CD1 /* orchestra */,
 				BD2AABD32DC03EC700222CD1 /* Packages */,
@@ -147,15 +150,6 @@
 				BD2AAC622DC17F5100222CD1 /* violin2_node.wav */,
 			);
 			path = SummerWav;
-			sourceTree = "<group>";
-		};
-		BD66152B2DC1909C00A63D9B /* scene */ = {
-			isa = PBXGroup;
-			children = (
-				BD6615292DC1909C00A63D9B /* scene.rkassets */,
-			);
-			name = scene;
-			path = scene/Sources/scene;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,14 +245,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BD66152D2DC1909C00A63D9B /* scene.rkassets in Resources */,
 				BD2AAC422DC0C17F00222CD1 /* violin1_node.mp3 in Resources */,
 				BD2AAC432DC0C17F00222CD1 /* viola_node.mp3 in Resources */,
+				BDC6F78C2DD178A6009C2DCB /* ballroom.exr in Resources */,
 				BD2AAC442DC0C17F00222CD1 /* cello_node.mp3 in Resources */,
 				BD2AAC452DC0C17F00222CD1 /* violin2_node.mp3 in Resources */,
 				BD2AAC642DC17F5100222CD1 /* violin2_node.wav in Resources */,
 				BD2AAC652DC17F5100222CD1 /* violin1_node.wav in Resources */,
 				BD2AAC662DC17F5100222CD1 /* cello_node.wav in Resources */,
+				BDC6F78E2DD17A78009C2DCB /* scene.rkassets in Resources */,
 				BD2AAC672DC17F5100222CD1 /* viola_node.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
